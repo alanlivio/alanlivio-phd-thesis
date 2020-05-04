@@ -1,5 +1,6 @@
 
 # Created by https://www.gitignore.io/api/latex
+# Edit at https://www.gitignore.io/?templates=latex
 
 ### LaTeX ###
 ## Core latex/pdflatex auxiliary files:
@@ -14,6 +15,7 @@
 *.fot
 *.cb
 *.cb2
+.*.lb
 
 ## Intermediate documents:
 *.dvi
@@ -42,7 +44,10 @@
 *.synctex.gz
 *.synctex.gz(busy)
 *.pdfsync
-*Notes.bib
+
+## Build tool directories for auxiliary files
+# latexrun
+latex.out/
 
 ## Auxiliary and intermediate files from other packages:
 # algorithms
@@ -63,6 +68,9 @@ acs-*.bib
 
 # changes
 *.soc
+
+# comment
+*.cut
 
 # cprotect
 *.cpt
@@ -107,12 +115,23 @@ acs-*.bib
 *.gls
 *.glsdefs
 
+# uncomment this for glossaries-extra (will ignore makeindex's style files!)
+# *.ist
+
 # gnuplottex
 *-gnuplottex-*
 
 # gregoriotex
 *.gaux
 *.gtex
+
+# htlatex
+*.4ct
+*.4tc
+*.idv
+*.lg
+*.trc
+*.xref
 
 # hyperref
 *.brf
@@ -126,11 +145,13 @@ acs-*.bib
 # listings
 *.lol
 
+# luatexja-ruby
+*.ltjruby
+
 # makeidx
 *.idx
 *.ilg
 *.ind
-*.ist
 
 # minitoc
 *.maf
@@ -149,7 +170,9 @@ _minted*
 *.mw
 
 # nomencl
+*.nlg
 *.nlo
+*.nls
 
 # pax
 *.pax
@@ -178,6 +201,9 @@ sympy-plots-for-*.tex/
 *.pytxcode
 pythontex-files-*/
 
+# tcolorbox
+*.listing
+
 # thmtools
 *.loe
 
@@ -189,8 +215,18 @@ pythontex-files-*/
 # todonotes
 *.tdo
 
+# vhistory
+*.hst
+*.ver
+
 # easy-todo
 *.lod
+
+# xcolor
+*.xcp
+
+# xmpincl
+*.xmpi
 
 # xindy
 *.xdy
@@ -213,6 +249,9 @@ TSWLatexianTemp*
 # Texpad
 .texpadtmp
 
+# LyX
+*.lyx~
+
 # Kile
 *.backup
 
@@ -220,10 +259,19 @@ TSWLatexianTemp*
 *~[0-9]*
 
 # auto folder when using emacs and auctex
-/auto/*
+./auto/*
+*.el
 
 # expex forward references with \gathertags
 *-tags.tex
 
+# standalone packages
+*.sta
+
+### LaTeX Patch ###
+# glossaries
+*.glstex
+
 # End of https://www.gitignore.io/api/latex
-main.pdf
+main*.pdf
+_main*.pdf
