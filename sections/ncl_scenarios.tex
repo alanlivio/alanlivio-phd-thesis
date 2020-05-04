@@ -1,0 +1,309 @@
+\chapter{NCL Envisaged Scenarios}
+\label{annex:scenarios}
+
+In this appendix, we present three of the envisaged scenarios using our extended
+NCL syntax, namely: “Put-that-there”, “I-Get-That-You-Put-It-There” and
+“Anyone-Get-That-Someone-Else-Put-It-There”. They enable users to move an image
+(the Ginga logo) using a combination of voice and gesture commands. To enable
+voice interactions, the scenarios use the same description files, namely
+“sentences.ssml” (\lis{list:annexb1}) and “commands.srgs”
+(\lis{list:annexb2}).
+
+\begin{listing}[h]
+\begin{minted}[linenos,fontsize=\scriptsize,numbersep=1pt,frame=lines,xleftmargin=10pt,framesep=2mm]{xml}
+<speak xmlns="http://www.w3.org/2001/10/synthesis">
+  <s id="repeat_question">where?</s>
+</speak>
+\end{minted}
+\caption{sentences.ssml.}
+\label{list:annexb1}
+\end{listing}
+
+\begin{listing}[h]
+\begin{minted}[linenos,fontsize=\scriptsize,numbersep=1pt,frame=lines,xleftmargin=10pt,framesep=2mm]{xml}
+<grammar xmlns="http://www.w3.org/2001/06/grammar">
+  <rule id="put_that">put that</rule>
+  <rule id="there">there</rule>
+</grammar>
+\end{minted}
+\caption{commands.sgrs.}
+\label{list:annexb2}
+\end{listing}
+
+\lis{list:annexb3} presents the NCL code of <media>, <input> and <ports>
+elements shared among the scenarios. Those scenarios only differ by the used
+<link> elements (discussed next). The <media> elements (lines 4-9) are “logo”,
+which define the movable image, and “sentences”, which define the speech
+feedback using “sentences.ssml”. An <area> element is defined in the “sentences”
+pointing to the SSML fragment responsible for defining the word “where”. The
+<input> elements (lines 10-19) are “pointer” input, responsible for recognizing
+the point on the screen at which the user’s finger is pointing, and “asr” input,
+to enable voice commands using the “commands.sgrs” file. Two anchors are defined
+in “asr”, pointing to SRGS rules with the ids “put that” and “there”. Both
+scenarios begin by starting the “logo”, “pointer”, and “asr” elements, as
+defined in the <port> elements (lines 1-3). In particular, the “asr” media is
+started by the “put\_that” interface, which defines the word expected in the
+first interaction.
+
+\begin{minted}[linenos,fontsize=\scriptsize,numbersep=1pt,frame=lines,xleftmargin=10pt,framesep=2mm]{xml}
+<port component="icon"/>
+<port component="pointer"/>
+<port component="asr" interface="put_that"/>
+<media id="icon" src="ginga.png">
+  <property name="location" value="20%, 20%"/>
+</media>
+<media id="sentences" src="sentences.ssml">
+  <area label="where"/>
+</media>
+<input id="pointer" type="application/x-ncl-pointer">
+  <area label="move"/>
+  <property name="x"/>
+  <property name="y"/>
+</input>
+<input id="asr" type="application/srgs+xml" src="commands.sgrs">
+  <property name="userClass" name="BoltLikeUser"/>
+  <area label="put_that"/>
+  <area label="there"/>
+</input>
+\end{minted}
+\captionvspace
+\begin{listing}[!ht]
+\caption{Used <media>, <input> and <port> elements in the three scenarios.}
+\label{list:annexb3}
+\end{listing}
+
+The first scenario, “Put-that-there”, requires two <link> elements, which use
+the new “recognition” event, both illustrated in \label{list:annexb4}. The first
+<link> defines that when the application recognizes a “put that” voice command,
+followed by the selection of the “logo” media, it will synthesize the word
+“where” and expect a “there” voice command. The second <link> defines that when
+the application recognize a “there” voice command, followed by a move of the
+pointer, the “logo” must be moved to the new position at which the user’s finger
+is pointing.
+
+\begin{minted}[linenos,fontsize=\scriptsize,numbersep=1pt,frame=lines,xleftmargin=10pt,framesep=2mm]{xml}
+<ncl xmlns="http://www.ncl.org.br/NCL3.0/EDTVProfile">
+  <head>
+    <connectorBase>
+      <causalConnector id="onRecognizeSEQonSelectionStart">
+        <compoundCondition operator="seq">
+          <simpleCondition role="onSelection"/>
+          <simpleCondition role="onRecognize"/>
+        </compoundCondition>
+        <simpleAction role="start"/>
+      </causalConnector>
+      <causalConnector id="onRecognizeSet">
+        <connectorParam name="varSet"/>
+        <simpleCondition role="onRecognize" qualifier="seq"/>
+        <simpleAction role="set" value="$varSet"/>
+      </causalConnector>
+    </connectorBase>
+  </head>
+  <body>
+    ... <!--### code from Listing 16 ###-->
+    <link xconnector="onRecognizeSEQonSelectionStart">
+      <bind role="onRecognize" component="asr" interface="put_that"/>
+      <bind role="onSelection" component="icon"/>
+      <bind role="start" component="sentences" interface="where"/>
+      <bind role="start" component="asr" interface="there"/>
+    </link>
+    <link xconnector="onRecognizeSet">
+      <bind role="onRecognize" component="asr" interface="there"/>
+      <bind role="onRecognize" component="pointer" interface="move"/>
+      <bind role="getValueX" component="pointer" interface="x"/>
+      <bind role="getValueY" component="pointer" interface="y"/>
+      <bind role="set" component="icon" interface="left">
+        <bindParam name="varSet" value="$getValueX"/>
+      </bind>
+      <bind role="set" component="icon" interface="top">
+        <bindParam name="varSet" value="$getValueY"/>
+      </bind>
+    </link>
+  </body>
+</ncl>
+\end{minted}
+\captionvspace
+\begin{listing}[!ht]
+\caption{Code fragment of “Put-That-There” in NCL.}
+
+\label{list:annexb4}
+\end{listing}
+
+The other two scenarios consider interactions of two distinct users. One user
+selects the icon and the other one moves it. Both scenarios require that users
+have a pointer and a microphone device. Such requirement is defined by the
+“boltlikeuser.sparql” file, illustrated in \label{list:annexb5}.
+
+\begin{listing}[!ht]
+\begin{minted}[linenos,fontsize=\scriptsize,numbersep=1pt,frame=lines,xleftmargin=10pt,framesep=2mm]{sql}
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX prf: <http://www.wapforum.org/profiles/UAPROF/ccppschema-20010430>
+SELECT ?person
+WHERE {
+ ?person foaf:mbox ?email FILTER regex(?email, "@inf.puc-rio.br$") .
+ ?person prf:component ?component1 . ?component1 prf:name ?name1 .
+ FILTER regex(?name1, "leapmotion") .
+ ?person prf:component ?component2 .  ?component2 prf:name ?name2 .
+ FILTER regex(?name2, "microphone")
+}
+\end{minted}
+\caption{boltlikeuser.sparql.}
+\label{list:annex5}
+\end{listing}
+
+The “I-Get-That-You-Put-It-There” scenario considers interactions from two
+identified users. \label{list:annexb6} shows the code fragment of this scenario,
+which uses a <userClass> element (lines 20-23) and modified versions of the
+<link> elements from the previous scenario. The difference from previous <link>
+elements use is the “user\_id” in <linkParam> to specify each interacting user.
+In the <link> elements’ connectors, those “user\_id” attributes are used as
+parameter for <simpleCondition>.
+
+\begin{minted}[linenos,fontsize=\scriptsize,numbersep=1pt,frame=lines,xleftmargin=10pt,framesep=2mm]{xml}
+  <ncl xmlns="http://www.ncl.org.br/NCL3.0/EDTVProfile">
+  <head>
+    <connectorBase>
+      <causalConnector id="onRecognizeSEQonSelectionByUserStart">
+        <connectorParam name="user_id"/>
+        <compoundCondition operator="seq">
+          <simpleCondition role="onRecognize" user_id="$user_id"/>
+          <simpleCondition role="onSelection" user_id="$user_id"/>
+        </compoundCondition>
+        <simpleAction role="start"/>
+      </causalConnector>
+      <causalConnector id="onRecognizeByUserSet">
+        <connectorParam name="user_id"/>
+        <connectorParam name="varSet"/>
+        <simpleCondition role="onRecognize" qualifier="seq"
+          user_id="$user_id" />
+        <simpleAction role="set" value="$varSet"/>
+      </causalConnector>
+    </connectorBase>
+    <userBase>
+      <userClass id="BoltLikeUser" min="2" max="2"
+        userClassDescription="boltlikeuser.sparql"/>
+    </userBase>
+  </head>
+  <body>
+    ... <!--### code from Listing 16 ###-->
+    <link xconnector="onRecognizeSEQonSelectionByUserStart">
+      <linkParam name="user_id" value="BoltLikeUser(1)"/>
+      <bind role="onRecognize" component="asr" interface="put_that"/>
+      <bind role="onSelection" component="icon"/>
+      <bind role="start" component="sentences" interface="where"/>
+      <bind role="start" component="asr" interface="there"/>
+    </link>
+    <link xconnector="onRecognizeSEQByUserSet">
+      <linkParam name="user_id" value="BoltLikeUser(2)"/>
+      <bind role="onRecognize" component="asr" interface="there"/>
+      <bind role="onRecognize" component="pointer" interface="move"/>
+      <bind role="getValueX" component="pointer" interface="x"/>
+      <bind role="getValueY" component="pointer" interface="y"/>
+      <bind role="set" component="icon" interface="left">
+        <bindParam name="varSet" value="$getValueX"/>
+      </bind>
+      <bind role="set" component="icon" interface="top">
+        <bindParam name="varSet" value="$getValueY"/>
+      </bind>
+    </link>
+  </body>
+</ncl>
+\end{minted}
+\begin{listing}[!ht]
+\caption{Code fragment of “I-Get-That-You-Put-It-There”.}
+\label{list:annexb6}
+\end{listing}
+
+Finally, the “Anyone-Get-That-Someone-Else-Put-It-There” scenario also considers
+interactions of any two users, but not specified ones. More precisely, it first
+expects the interaction of any user and, in sequence, the interaction of another
+one, who must be different from the first one. To define this behavior, we split
+the first <link> of previous scenarios in two links. \label{list:annexb7} shows
+the code fragment of the three <link> elements, which are described in what
+follows.
+
+The first <link> (lines 32-37) says that when any user perform the voice command
+“put\_that”, we then store its “user\_id”. To get the “user\_id”, this <link>
+uses our extended <linkParam> (lines 34-35) and <connectorParam> (lines 6-7).
+The <connectorParam> access the “user\_id” from a “recognition” event of the
+given interface passed in the <linkParam>. Then, the link sets the “user\_id”
+value to a given role, which in our case is the SettingsNode.
+
+The second <link> (lines 38-44) says that when the user, with the stored
+“user\_id”, performs the selection of the “logo” media, the application will
+synthesize the word “where” and expect a “there” voice command. To use the
+stored “user\_id” in the <simpleCondtion> for the “onSelection” role, this
+<link> also uses our extended <linkParam> (lines 39-40).
+
+Finally, the third <link> (lines 45-58) says that when another user performs the
+voice command “there”, the “logo” must be moved to the new position at which
+this user is pointing. Here, “another user” is defined by specifying
+“excluded\_user\_id” in the <bindParam>, which is the value of the previously
+stored “user\_id”, from the first interaction.
+
+\begin{minted}[linenos,fontsize=\scriptsize,numbersep=1pt,frame=lines,xleftmargin=10pt,framesep=2mm]{xml}
+<ncl xmlns="http://www.ncl.org.br/NCL3.0/EDTVProfile">
+  <head>
+    <connectorBase>
+      <causalConnector id="onRecognizeSetUserId">
+        <simpleCondition role="onRecognize"/>
+        <connectorParam name="get_recognized_user" evenType="recognition"
+          attributeType="user_id"/>
+        <simpleAction role="set" value="$get_recognized_user"/>
+      </causalConnector>
+      <causalConnector id="onSelectionByUserStart">
+        <connectorParam name="user_id"/>
+        <simpleCondition role="onSelection" user_id="$user_id"/>
+        <simpleAction role="start"/>
+      </causalConnector>
+      <causalConnector id="onRecognizeByExcludedUserSet">
+        <connectorParam name="excluded_user_id"/>
+        <simpleCondition role="onRecognize" qualifier="seq"
+          excluded_user_id="$excluded_user_id"/>
+        <simpleAction role="set"/>
+      </causalConnector>
+    </connectorBase>
+    <userBase>
+      <userClass id="BoltLikeUser" min="2" max="2"
+        userClassDescription="boltlikeuser.sparql"/>
+    </userBase>
+  </head>
+  <body>
+    ... <!--### code from Listing 16 ###-->
+    <media id="settings" type="application/x-ncl-settings">
+      <property name="first_user"/>
+    </media>
+    <link xconnector="onRecognizeSetUserId">
+      <bind role="onRecognize" component="asr" interface="put_that"/>
+      <linkParam name="get_recognized_user" component="asr"
+        interface="put_that"/>
+      <bind role="set" component="settings" interface="first_user"/>
+    </link>
+    <link xconnector="onSelectionByUserStart">
+      <linkParam name="user_id" component="settings"
+         interface="first_user"/>
+      <bind role="onSelection" component="logo"/>
+      <bind role="start" component="sentences" interface="where"/>
+      <bind role="start" component="asr" interface="there"/>
+    </link>
+    <link xconnector="onRecognizeByExcludedUserSet">
+      <linkParam name="excluded_user_id" component="settings"
+        interface="first_user"/>
+      <bind role="onRecognize" component="asr" interface="there"/>
+      <bind role="onRecognize" component="pointer" interface="move"/>
+      <bind role="getValueX" component="pointer" interface="x"/>
+      <bind role="getValueY" component="pointer" interface="y"/>
+      <bind role="set" component="icon" interface="left">
+        <bindParam name="varSet" value="$getValueX"/>
+      </bind>
+      <bind role="set" component="icon" interface="top">
+        <bindParam name="varSet" value="$getValueY"/>
+      </bind>
+    </link>
+  </body>
+</ncl>
+\end{minted}
+\begin{listing}[!ht]
+\caption{Code fragment of “Anyone-Get-That-Someone-Else-Put-It-There”.}
+\label{list:annexb7}
+\end{listing}

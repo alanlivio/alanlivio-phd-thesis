@@ -1,0 +1,121 @@
+\chapter{Final Remarks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{chp:final}
+
+On the one hand, the studies performed by the multimedia research community has
+resulted in multimedia-oriented programming languages, such as HTML, SMIL, and
+NCL, which focus on the synchronization of audiovisual modalities (\textit{e.g.} text,
+graphics, and videos) and GUI-based (keyboard and mouse) input modalities. On
+the other hand, the studies performed by the multimodal interaction research
+community have resulted in programming languages and frameworks that support the
+development of MUIs. In general, however, the languages and frameworks proposed
+by either community suffer some relevant drawbacks (discussed in
+\sect{sec:state:drawbacks}).
+In this thesis, we propose to extend multimedia languages to support both
+multimodal and multiuser interactions. We believe that these extensions can
+contribute to the state of the art by overcoming the drawbacks and same time
+increasing multimodal specification expressiveness.
+
+A multimedia language that follows our model should instantiate as first-class
+citizens our proposed entities, i.e. \textit{Media}, \textit{Recognizer},
+\textit{Relationship} and \textit{UserClass}. By so doing, these enable their
+developers also handle both fusion and fission processes, thus,
+prevents\textit{ the strong encapsulation between fusion and fission}.
+Moreover, the multimedia language will also support modality selection based on
+the user’s sensory capabilities and specification of interacting users, and the
+association of a user with recognition events. We discuss in
+\sect{chp:instantiation} the instantiation of the model entities into the NCL
+and HTML languages though new elements their syntax.
+
+Besides overcoming the above drawbacks, our proposal also achieves more
+expressiveness when combining both output and input modalities. It does so by
+using the causal relationship and anchor concepts from NCM. Those concepts
+enable NCM express Allen’s temporal relations among output modalities. In our
+approach, we enable such concepts for input modalities which enable it express
+Allen’s temporal relations among both output modalities and input modalities.
+
+To evaluate our approach, we perform an evaluation study comprised 37
+participants. We organize them into two groups based on their self-assessment
+of their knowledge of NCL and HTML. We organize them as 21 participants in the
+HTML group and 16 in the NCL group. This study was performed made it in two
+parts. The first part focuses on the conceptual entities, whereas the second
+part focuses on our proposed syntaxes for HTML and NCL. The first part about
+the conceptual entities was a challenge, because those entities were created to
+be independent from representation syntax. To do so, we used a block-based
+programing paradigm to enable users to develop applications using only the
+concept entities, at a level of abstraction higher than that of either NCL or
+HTML.
+
+In both parts of the evaluation study, we presented the concepts entities and aiming at capture evidences of understanding and acceptance. To capture evidences of understanding, we ask developers answers coding tasks. To captures evidences of acceptance we use TAM based questionnaires. Both NCL and HTML participants, in general, performed the tasks with feel errors, which may indicate that they had reasonably understood, and they presents good acceptance in their answers to TAM questions.
+
+\section{Publications}
+\label{sec:publications}
+
+Until the present moment, we archive the following
+publications. In particular, those publications discuss the development of envisaged scenarios in NCL, varying the modalities and interacting users.
+
+\begin{itemize}
+	\item	 A. L. V. Guedes, R. G. de A. Azevedo, M. F. Moreno, and L. F. G.
+	Soares, “Specification of Multimodal Interactions in NCL,” in Proceedings of
+	the 21st Brazilian Symposium on Multimedia and the Web, New York, NY, USA,
+	2015, pp. 181–187~\cite{guedes_specification_2015}.
+	\item	A. L. V. Guedes, “Towards Supporting Multimodal and Multiuser
+	Interactions in Multimedia Languages,” in In: Doctoral Consortium. Proceedings
+	of the 2016 ACM Symposium on Document Engineering, New York, NY, USA,
+	2016~\cite{guedes_towards_2016}.
+	\item	A. L. V. Guedes, R. G. de A. Azevedo, and Simone Diniz Junqueira
+	Barbosa, “Extending multimedia languages to support multimodal user
+	interactions,” Multimed Tools Appl, pp. 1–30, Oct. 2016
+	~\cite{guedes_extending_2016}.
+	\item	A. L. V. Guedes, R. G. de Albuquerque Azevedo, S. Colcher, and S. D. J.
+	Barbosa, “Extending NCL to Support Multiuser and Multimodal Interactions,” in
+	Proceedings of the 22Nd Brazilian Symposium on Multimedia and the Web, New
+	York, NY, USA, 2016, pp. 39–46~\cite{guedes_extending_2016-1}.
+	\item	A. L. V. Guedes, Marcio Cunha, Hugo Fuks, Sérgio Colcher, and Simone
+	Diniz Junqueira Barbosa, “Using NCL to Synchronize Media Objects, Sensors and
+	Actuators,” in In: Workshop Internacional de Sincronismo das Coisas (WSoT), 1,
+	2016, Teresina. Anais do XXII Simpósio Brasileiro de Sistemas Multimídia e
+	Web. Porto Alegre: Sociedade Brasileira de Computação, 2016. v. 2, New York,
+	NY, USA, 2016~\cite{guedes_using_2016}.
+
+\end{itemize}
+
+\section{Future Works}
+\label{sec:future}
+
+As future work, we first aim at improving our proposal following two main paths.
+
+First, we aim to investigate how to integrate higher-level constructions for
+dialog management into our proposal. For instance, this could be achieved
+through mappings from the form-based or state machine-based constructions onto
+our conditions and actions. In particular, the mapping of these higher-level
+constructs would generate stop/start of Recognizer elements, which participants
+often missed in our evaluation.
+
+Second, we aim to implement a system that fulfill the execution requirements
+(discussed in \sect{sec:intro:scenarios}) and develop more usage scenarios. In
+particular, since NCL is an international standard for DTV, an NCL-based system
+may be used to exploit new kinds of applications in the DTV domain. It allows
+to go beyond the limited interaction (\textit{e.g.} remote control) and
+audiovisual media currently supported in this domain. Example of applications
+that can take advantages of our proposal include: (1) accessibility
+applications for disabled people or for the elderly; (2) educational
+applications for kids, like interactive classes of language or math; (3)
+immersive applications using different sensors and actuators.
+
+Following the above paths, we also aim at investigating the development of
+multimedia applications with multimodal interaction features for mobile and
+ubiquitous environments. Most mobile devices have sensor technologies —such as
+accelerometer, compass, and geographic location— and actuators —such as
+vibration motors. These devices can be useful for many kinds of multimodal user
+interactions in multimedia applications.
+
+Moreover, the development of graphical abstractions for multimedia authoring
+with multimodal interactions is also necessary. Graphical tools offer an
+alternative to editing XML code, which is often tedious and error prone; for
+instance, a graphical editor could help in expressing complex temporal relations
+between modalities. In particular, we can also improve our block-based
+representation. It can be only both a standalone tool that generate NCL/HTML
+code or be integrated some in authoring tool for one those languages. For
+instance, NCL Composer~\cite{azevedo_composer:_2014} can use the block-based
+presentation as an authoring view.

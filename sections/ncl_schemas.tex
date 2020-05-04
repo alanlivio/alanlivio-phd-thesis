@@ -1,0 +1,264 @@
+\chapter{NCL Schemas}
+\label{annex:schemas}
+
+In this appendix, we present five XML schemas from NCL 3.0\footnotemark~with
+our proposed extensions. The first one, illustrated in \lis{list:annexa1}, is a
+new schema  called NCL30Input.xsd, which includes our <input> element. The
+second one,  illustrated in \lis{list:annexa2}, is a new schema called
+NCL30UserClass.xsd,  which  includes our <userClass> element. The renaming
+schemas are modified  versions of existing ones from the NCL 3.0 (changes are
+highlighted in light  green), to include our extensions to link-related
+elements. The third schema, illustrated in \lis{list:annexa3}, is a modified
+version of the NCL30ConnectorCommonPart.xsd. The fourth schema, illustrated in
+\lis{list:annexa4}, is an extended version of
+the NCL30ConnectorCausalExpression.xsd. Finally, the fifth schema, illustrated
+in \lis{list:annexa5}, is a modified version of the NCL30Linking.xsd.
+
+\footnotetext{\url{https://github.com/TeleMidia/ncl30-schemas/}}
+
+
+\begin{listing}[!ht]
+\begin{minted}[linenos,fontsize=\scriptsize,numbersep=1pt,frame=lines,xleftmargin=10pt,framesep=2mm,]{xml}
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:input="http://www.ncl.org.br/NCL3.0/Input"
+  targetNamespace="http://www.ncl.org.br/NCL3.0/Input"
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <complexType name="inputPrototype">
+    <attribute name="id" type="ID" use="required"/>
+    <attribute name="type" type="string" use="optional"/>
+    <attribute name="src" type="anyURI" use="optional"/>
+  </complexType>
+  <element name="input" type="input:inputPrototype"/>
+</schema>
+\end{minted}
+\caption{New NCL30Input.xsd.}
+\label{list:annexa1}
+\end{listing}
+
+\begin{listing}[!ht]
+\begin{minted}[linenos,fontsize=\scriptsize,numbersep=1pt,frame=lines,xleftmargin=10pt,framesep=2mm]{xml}
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:userclass="http://www.ncl.org.br/NCL3.0/UserClass"
+  targetNamespace="http://www.ncl.org.br/NCL3.0/UserClass "
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <complexType name="userClassPrototype">
+    <attribute name="id" type="ID" use="required"/>
+    <attribute name="min" type="positiveInteger" use="required"/>
+    <attribute name="max" type="positiveInteger" use="required"/>
+    <attribute name="src" type="anyURI" use="required"/>
+  </complexType>
+  <element name="userClass" type="userClass:userClassPrototype"/>
+</schema>
+\end{minted}
+\caption{New NCL30UserClass.xsd.}
+\label{list:annexa2}
+\end{listing}
+
+\begin{listing}[!ht]
+\begin{minted}[linenos,fontsize=\scriptsize,numbersep=1pt,frame=lines,xleftmargin=10pt,framesep=2mm,
+ highlightlines={8,9,17,24}]{xml}
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:connectorCommonPart="http://www.ncl.org.br/NCL3.0/ConnectorCommonPart"
+  targetNamespace="http://www.ncl.org.br/NCL3.0/ConnectorCommonPart"
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <complexType name="parameterPrototype">
+    <attribute name="name" type="string" use="required"/>
+    <attribute name="type" type="string" use="optional"/>
+    <attribute name="component" type="IDREF" use="optional"/>
+    <attribute name="interface" type="string" use="optional"/>
+  </complexType>
+  <simpleType name="eventPrototype">
+    <restriction base="string">
+      <enumeration value="presentation" />
+      <enumeration value="selection" />
+      <enumeration value="attribution" />
+      <enumeration value="composition" />
+      <enumeration value="recognition" />
+    </restriction>
+  </simpleType>
+  <simpleType name="logicalOperatorPrototype">
+    <restriction base="string">
+      <enumeration value="and" />
+      <enumeration value="or" />
+      <enumeration value="seq" />
+    </restriction>
+  </simpleType>
+  <simpleType name="transitionPrototype">
+    <restriction base="string">
+      <enumeration value="starts" />
+      <enumeration value="stops" />
+      <enumeration value="pauses" />
+      <enumeration value="resumes" />
+      <enumeration value="aborts" />
+    </restriction>
+  </simpleType>
+</schema>
+\end{minted}
+\caption{Extended NCL30ConnectorCommonPart.xsd.}
+\label{list:annexa3}
+\end{listing}
+
+\begin{listing}[t]
+\begin{minted}[linenos,fontsize=\scriptsize,numbersep=1pt,frame=topline,xleftmargin=10pt,framesep=2mm, highlightlines={19}]{xml}
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:connectorCausalExpression="http://www.ncl.org.br/NCL3.0/ConnectorCausalExpression"
+  xmlns:connectorCommonPart="http://www.ncl.org.br/NCL3.0/ConnectorCommonPart"
+  targetNamespace="http://www.ncl.org.br/NCL3.0/ConnectorCausalExpression"
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <import namespace="http://www.ncl.org.br/NCL3.0/ConnectorCommonPart"
+  schemaLocation="http://www.ncl.org.br/NCL3.0/modules/NCL30ConnectorCommonPart.xsd"/>
+  <simpleType name="conditionRoleUnion">
+    <union memberTypes="string
+    connectorCausalExpression:conditionRolePrototype"/>
+  </simpleType>
+  <simpleType name="conditionRolePrototype">
+    <restriction base="string">
+      <enumeration value="onBegin" />
+      <enumeration value="onEnd" />
+      <enumeration value="onPause" />
+      <enumeration value="onResume" />
+      <enumeration value="onAbort" />
+      <enumeration value="onRecognize" />
+    </restriction>
+  </simpleType>
+  <simpleType name="maxUnion">
+    <union memberTypes="positiveInteger
+    connectorCausalExpression:unboundedString"/>
+  </simpleType>
+  <simpleType name="unboundedString">
+    <restriction base="string">
+      <pattern value="unbounded"/>
+    </restriction>
+  </simpleType>
+\end{minted}
+\end{listing}
+
+\begin{listing}[t]
+\begin{minted}[linenos,fontsize=\scriptsize,numbersep=1pt,frame=none,xleftmargin=10pt,framesep=2mm, firstnumber=31, highlightlines={36,37}]{xml}
+  <complexType name="simpleConditionPrototype">
+    <attribute name="role" type="connectorCausalExpression:conditionRoleUnion"
+      use="required"/>
+    <attribute name="eventType" type="connectorCommonPart:eventPrototype"
+      use="optional"/>
+    <attribute name="user_id" type="string" use="optional"/>
+    <attribute name="excluded_user_id" type="string" use="optional"/>
+    <attribute name="key" type="string" use="optional"/>
+    <attribute name="transition" type="connectorCommonPart:transitionPrototype"
+      use="optional"/>
+    <attribute name="delay" type="string" use="optional"/>
+    <attribute name="min" type="positiveInteger" use="optional"/>
+    <attribute name="max" type="connectorCausalExpression:maxUnion"
+      use="optional"/>
+    <attribute name="qualifier"
+      type="connectorCommonPart:logicalOperatorPrototype" use="optional"/>
+  </complexType>
+  <complexType name="compoundConditionPrototype">
+    <attribute name="operator"
+      type="connectorCommonPart:logicalOperatorPrototype" use="required"/>
+    <attribute name="delay" type="string" use="optional"/>
+  </complexType>
+  <simpleType name="actionRoleUnion">
+    <union memberTypes="string connectorCausalExpression:actionNamePrototype"/>
+  </simpleType>
+  <simpleType name="actionNamePrototype">
+    <restriction base="string">
+      <enumeration value="start" />
+      <enumeration value="stop" />
+      <enumeration value="pause" />
+      <enumeration value="resume" />
+      <enumeration value="abort" />
+      <enumeration value="set" />
+    </restriction>
+  </simpleType>
+  <simpleType name="actionOperatorPrototype">
+    <restriction base="string">
+      <enumeration value="par" />
+      <enumeration value="seq" />
+    </restriction>
+  </simpleType>
+  <complexType name="simpleActionPrototype">
+    <attribute name="role" type="connectorCausalExpression:actionRoleUnion"
+      use="required"/>
+    <attribute name="eventType" type="connectorCommonPart:eventPrototype"
+      use="optional"/>
+    <attribute name="actionType"
+      type="connectorCausalExpression:actionNamePrototype" use="optional"/>
+    <attribute name="delay" type="string" use="optional"/>
+    <attribute name="value" type="string" use="optional"/>
+    <attribute name="repeat" type="positiveInteger" use="optional"/>
+    <attribute name="repeatDelay" type="string" use="optional"/>
+    <attribute name="min" type="positiveInteger" use="optional"/>
+    <attribute name="max" type="connectorCausalExpression:maxUnion"
+      use="optional"/>
+    <attribute name="qualifier"
+      type="connectorCausalExpression:actionOperatorPrototype" use="optional"/>
+  </complexType>
+
+\end{minted}
+\end{listing}
+
+\begin{listing}[!ht]
+\begin{minted}[linenos,fontsize=\scriptsize,numbersep=1pt,frame=bottomline,xleftmargin=10pt,framesep=2mm]{xml}
+  <complexType name="compoundActionPrototype">
+    <choice minOccurs="2" maxOccurs="unbounded">
+      <element ref="connectorCausalExpression:simpleAction" />
+      <element ref="connectorCausalExpression:compoundAction" />
+    </choice>
+    <attribute name="operator"
+      type="connectorCausalExpression:actionOperatorPrototype" use="required"/>
+    <attribute name="delay" type="string" use="optional"/>
+  </complexType>
+  <element name="simpleCondition"
+    type="connectorCausalExpression:simpleConditionPrototype" />
+  <element name="compoundCondition"
+    type="connectorCausalExpression:compoundConditionPrototype" />
+  <element name="simpleAction"
+    type="connectorCausalExpression:simpleActionPrototype" />
+  <element name="compoundAction"
+    type="connectorCausalExpression:compoundActionPrototype" />
+</schema>
+\end{minted}
+\caption{Extended NCL30ConnectorCausalExpression.xsd.}
+\label{list:annexa4}
+\end{listing}
+
+\begin{listing}[!ht]
+\begin{minted}[linenos,fontsize=\scriptsize,numbersep=1pt,frame=lines,xleftmargin=10pt,framesep=2mm,
+ highlightlines={8,9}]{xml}
+  <schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:linking="http://www.ncl.org.br/NCL3.0/Linking"
+  targetNamespace="http://www.ncl.org.br/NCL3.0/Linking"
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <complexType name="paramPrototype">
+    <attribute name="name" type="string" use="required"/>
+    <attribute name="value" type="anySimpleType" use="required"/>
+    <attribute name="component" type="IDREF" use="required"/>
+    <attribute name="interface" type="string" use="optional"/>
+  </complexType>
+  <complexType name="bindPrototype">
+    <sequence minOccurs="0" maxOccurs="unbounded">
+      <element ref="linking:bindParam"/>
+    </sequence>
+    <attribute name="role" type="string" use="required"/>
+    <attribute name="component" type="IDREF" use="required"/>
+    <attribute name="interface" type="string" use="optional"/>
+  </complexType>
+  <complexType name="linkPrototype">
+    <sequence>
+      <element ref="linking:linkParam" minOccurs="0" maxOccurs="unbounded"/>
+      <element ref="linking:bind" minOccurs="2" maxOccurs="unbounded"/>
+    </sequence>
+    <attribute name="id" type="ID" use="optional"/>
+    <attribute name="xconnector" type="string" use="required"/>
+  </complexType>
+  <element name="linkParam" type="linking:paramPrototype"/>
+  <element name="bindParam" type="linking:paramPrototype"/>
+  <element name="bind" type="linking:bindPrototype" />
+  <element name="link" type="linking:linkPrototype" />
+</schema>
+\end{minted}
+\caption{ Extended NCL30Linking.xsd.}
+\label{list:annexa5}
+\end{listing}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
