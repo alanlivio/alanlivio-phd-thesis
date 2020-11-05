@@ -1,6 +1,6 @@
 # alanlivio-thesis
 
-This is the latex code of my PhD thesis at PUC-Rio.
+This is the latex code of my [PhD thesis at PUC-Rio](https://doi.org/10.17771/PUCRio.acad.32313).
 
 ## bib
 
