@@ -1,0 +1,118 @@
+% -*- coding: utf-8; -*-
+\documentclass[
+  doutorado,
+  american
+]{ThesisPUC}
+
+
+% config
+% ----------------------------------------
+\input{config}
+\usepackage{lmodern}
+\usepackage[pdftex]{graphicx}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{colortbl}
+\usepackage{textcomp}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{amssymb}
+% hyphenation
+\hyphenation{input}
+\hyphenation{operators}
+\hyphenation{recognizer}
+\hyphenation{assign}
+% Other commands
+\newcommand{\Rset}{\mathbb{R}}
+\newcommand{\Zset}{\mathbb{Z}}
+\modotabelas{figtab} %% [nada, fig, tab ou figtab]
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+\input{defs}
+% Extras to template
+% handle fullpage image
+\usepackage{rotating}
+\usepackage{pdflscape}
+\usepackage{adjustbox}
+\usepackage{frame}
+% images
+\usepackage{forloop}
+% handle refs
+\newcommand{\fig}[1]{\figurename~\ref{#1}}
+\newcommand{\tab}[1]{Table~\ref{#1}}
+\newcommand{\lis}[1]{Listing~\ref{#1}}
+\newcommand{\chp}[1]{Chapter~\ref{#1}}
+\newcommand{\appen}[1]{Appendix~\ref{#1}}
+\newcommand{\sect}[1]{Section~\ref{#1}}
+\newcommand{\subsect}[1]{subsection~\ref{#1}}
+% handle caption spaces
+\setlength{\abovecaptionskip}{3pt}
+\setlength{\belowcaptionskip}{0pt}
+\newcommand{\captionvspace}{\vspace{-1.3em}}
+% handle code listing
+\usepackage[chapter]{minted}
+\newenvironment{codelisting}{\captionsetup{type=listing}}{}
+\AtBeginEnvironment{listing}{\setcounter{listing}{\value{lstlisting}}}
+\AtEndEnvironment{listing}{\stepcounter{lstlisting}}
+\input{sections/pretext.tex}
+
+% -- begin document
+% ----------------------------------------
+\begin{document}
+\begin{thenotations}
+\begin{tabular}{ll}
+  ASR & Audio Speech Recognition\\
+  BML & Behavior Markup Language\\
+  DOM & Document Object Model\\
+  DTMF & Dual-Tone Multi-Frequency\\
+  EMMA & Extensible MultiModal Annotation markup language \\
+  GDL & Gesture Description Language \\
+  GML & Gesture Markup Language \\
+  GUI & Graphical User Interfaces \\
+  HTML & Hypertext Markup Language \\
+  InkML & Ink Markup Language \\
+  MDE & Model-Driven Engineering \\
+  MUI & Multimodal User interfaces \\
+  NCL & Nested Context Language \\
+  NCM & Nested Context Model \\
+  RDF & Resource Description Framework \\
+  SALT & Speech Application Language Tags \\
+  SCXML & State Chart eXtensible Markup Language \\
+  SELD & Sensory Effect Description Language \\
+  SMIL & Synchronized Multimedia Integration Language \\
+  SMUIML & Synchronized Multimodal User Interaction Modeling
+  Language \\
+  SPARQL & SPARQL Protocol and RDF Query Language \\
+  SRGS & Speech Recognition Grammar Specification \\
+  SSML & Speech Synthesis Markup Language \\
+  TTS & Text-To-Speech \\
+  UAProf & User Agent Profile \\
+  UsiXML & User Interface eXtended Markup Language \\
+  VoiceXML & Voice eXtensible Markup Language \\
+  WIMP & Windows, Icons, Menus, and Pointers \\
+  XHTML & eXtensible Hypertext Markup Language \\
+  XISL & eXtensible Interaction Scenario Language \\
+  XML & eXtensible Markup Language \\
+\end{tabular}
+\end{thenotations}
+
+\input{sections/intro.tex}
+\input{sections/state_of_art.tex}
+\input{sections/approach.tex}
+\input{sections/instantiation.tex}
+\input{sections/evaluation.tex}
+\input{sections/final_remarks.tex}
+
+{ \footnotesize
+   \arial
+   \bibliography{refs}
+}
+\normalfont
+\appendix
+
+\input{sections/ncl_schemas.tex}
+\input{sections/ncl_scenarios.tex}
+\input{sections/screenshots.tex}
+\end{document}
